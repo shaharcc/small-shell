@@ -1,6 +1,6 @@
 # small-shell
 A shell that resembles UNIX shell, supports different set of commands.
-This is based on an assignment given on OS course.
+This is based on an assignment given at OS course.
 The shell supports IO, pipes, and complex commands (that requirs bin/bash files) in addition to these commands:
 - chprompt: change prompt
 - showpid: print current's process id
