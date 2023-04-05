@@ -128,6 +128,7 @@ class JobsList {
    JobEntry(jid_t jobId, pid_t jobPid, time_t creation_time, string& command, bool is_stopped, int duration);
    time_t getElapsedTime() const;
   };
+  
  public:
     vector<JobEntry> jobs_list;
     jid_t jobs_num;
@@ -147,7 +148,6 @@ class JobsList {
 };
 
 class ChpromptCommand : public BuiltInCommand {
-    // TODO: Add your data members
 public:
     explicit ChpromptCommand(const char* cmd_line);
     virtual ~ChpromptCommand() {}
@@ -190,7 +190,6 @@ class SmallShell {
         string prompt = "smash";
         string previous_dir = "";
 
-//        pid_t current_process_pid = EMPTY;
         jid_t fg_jid = EMPTY;
         pid_t curr_fg_pid = EMPTY;
         string current_cmd;
@@ -203,13 +202,14 @@ class SmallShell {
         string getPrompt() {
             return prompt;
         }
+  
         Command *CreateCommand(const char* cmd_line);
         SmallShell(SmallShell const&) = delete; // disable copy ctor
         void operator=(SmallShell const&)  = delete; // disable = operator
-        static SmallShell& getInstance() // make SmallShell singleton
-        {
-            static SmallShell instance; // Guaranteed to be destroyed.
-            // Instantiated on first use.
+        static SmallShell& getInstance() {
+        // make SmallShell singleton
+            static SmallShell instance;
+            // Instantiated on first use and guaranteed to be destroyed
             return instance;
         }
         ~SmallShell();
@@ -217,70 +217,6 @@ class SmallShell {
         JobsList::JobEntry* getTimedOutJob();
         time_t getMostRecentAlarmTime();
         void addTimeoutToAlarm(const char* cmd, pid_t pid, int duration);
-
-  // void setPrevDir (char* current_dir){
-  //     previous_dir = current_dir;
-  // }
-//  static void setPrompt(string new_prompt) {
-//      prompt = new_prompt;
-//  }
-//  static void setCmdIsFg(bool state) {
-//      is_cmd_fg = state;
-//  }
-//  void setCurrProcess(pid_t pid) {
-//    current_process = pid;
-//  }
-//  void setCurrCmd(string cmd) {
-//    current_cmd = cmd;
-//  }
-//  void setFgJid(jid_t job_id) {
-//    fg_jid = job_id;
-//  }
-//  void setIsFgAlarm(bool state) {
-//    is_fg_alarm = state;
-//  }
-//    void setCurrDuration(time_t duration) {
-//    current_duration = duration;
-//  }
-//    void setCurrAlarmCmd(string cmd) {
-//    current_alarm_cmd = cmd;
-//  }
-//  pid_t getCurrProcess() {
-//    return current_process;
-//  }
-//  string getCurrAlarmCmd() {
-//    return current_alarm_cmd;
-//  }
-//  static string getPrompt () {
-//      return prompt;
-//  }
-//  static bool getIsCmdFg () {
-//      return is_cmd_fg;
-//  }
-//  static bool getIsFgAlarm () {
-//      return is_fg_alarm;
-//  }
-//  static pid_t getPid () {
-//      return pid;
-//  }
-//  jid_t getId () {
-//      return current_job;
-//  }
-//  JobsList getJobsList() const {
-//      return jobs_list;
-//  }
-//  JobsList getAlarmsList() const {
-//      return alarms_list;
-//  }
-//  time_t getCurrDuration() {
-//    return current_duration;
-//  }
-//  string getPreviousWD () {
-//      return previous_dir;
-//  }
-//  void setPreviousWD (string newWD){
-//      previous_dir = newWD;
-//  }
 };
 
 #endif //SMASH_COMMAND_H_
