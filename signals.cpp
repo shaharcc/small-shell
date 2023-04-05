@@ -9,7 +9,6 @@ using namespace std;
 void ctrlZHandler(int sig_num) {
 	SmallShell &smash = SmallShell::getInstance();
     pid_t pid = smash.curr_fg_pid;
- //   jid_t jid = smash.fg_jid;
     cout << "smash: got ctrl-Z" << endl;
     if (pid == FAIL){ //there's no process running in fg
         return;
@@ -37,7 +36,8 @@ void ctrlCHandler(int sig_num) {
   SmallShell &smash = SmallShell::getInstance();
   pid_t pid = smash.curr_fg_pid;
   cout << "smash: got ctrl-C" << endl;
-  if (pid == EMPTY){ //no process in fg
+  if (pid == EMPTY){ 
+	  // no process in fg
       return;
   }
   if (kill(pid,SIGKILL) != 0){
@@ -70,4 +70,3 @@ void alarmHandler(int sig_num) {
     } 
   }
 }
-
