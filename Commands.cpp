@@ -43,11 +43,11 @@ char** makeArgs(const char* cmd_line, int *num_of_args){
     return args;
 }
 
-void freeArgs (char **args, int size){
-    if (!args){
+void freeArgs (char **args, int size) {
+    if (!args) {
         return;
     }
-    for (int i=0; i<size; i++){
+    for (int i=0; i<size; i++) {
         if (args[i]){
             free(args[i]);
         }
@@ -55,22 +55,20 @@ void freeArgs (char **args, int size){
     free(args);
 }
 
-string _ltrim(const std::string& s)
-{
+string _ltrim(const std::string& s) {
     size_t start = s.find_first_not_of(WHITESPACE);
     return (start == std::string::npos) ? "" : s.substr(start);
 }
 
-string _rtrim(const std::string& s)
-{
+string _rtrim(const std::string& s) {
     size_t end = s.find_last_not_of(WHITESPACE);
     return (end == std::string::npos) ? "" : s.substr(0, end + 1);
 }
 
-string _trim(const std::string& s)
-{
+string _trim(const std::string& s) {
     return _rtrim(_ltrim(s));
 }
+
 int _parseCommandLine(const char* cmd_line, char** args) {
     FUNC_ENTRY()
     int i = 0;
@@ -82,7 +80,6 @@ int _parseCommandLine(const char* cmd_line, char** args) {
         args[++i] = nullptr;
     }
     return i;
-
     FUNC_EXIT()
 }
 
@@ -110,7 +107,7 @@ void _removeBackgroundSign(char* cmd_line) {
 }
 
 //make sure the last char "/n" is also checked
-bool isNumber (string str){
+bool isNumber (string str) {
     int num =0; //num of '-' (should ignore)
     while(str[num] == '-') {
         num++;
@@ -123,7 +120,7 @@ bool isNumber (string str){
     return true;
 }
 
-bool is_cmd_builtin_bg(string cmd_s){
+bool is_cmd_builtin_bg(string cmd_s) {
     string cmd_to_run = cmd_s.substr(0, cmd_s.find_first_of(" \n"));
     return (cmd_to_run == "chprompt&") ||
            (cmd_to_run == "showpid&") ||
@@ -143,7 +140,6 @@ SmallShell::~SmallShell() = default;
 SmallShell::SmallShell() {}
 
 Command * SmallShell::CreateCommand(const char* cmd_line) {
-//    const char* no_ampersand
     string cmd_s = _trim(string(cmd_line));
     bool is_background = _isBackgroundCommand(cmd_line);
     char c_cmd_line[COMMAND_ARGS_MAX_LENGTH];
@@ -212,10 +208,10 @@ Command * SmallShell::CreateCommand(const char* cmd_line) {
 
 Command::Command(const char *cmd_line) : cmd_line(cmd_line) {
     string cmd_trimmed = _trim(string(cmd_line));
-    if (_isBackgroundCommand(cmd_line)){
+    if (_isBackgroundCommand(cmd_line)) {
         cmd_no_ampersand = cmd_trimmed.substr(0, cmd_trimmed.length() - 1);
     }
-    else{
+    else {
         cmd_no_ampersand = cmd_trimmed;
     }
     num_of_args = _parseCommandLine(cmd_no_ampersand.c_str(), args);
@@ -223,11 +219,12 @@ Command::Command(const char *cmd_line) : cmd_line(cmd_line) {
 
 void SmallShell::executeCommand(const char *cmd_line) {
     string s_cmd_line = cmd_line;
-    if (s_cmd_line.find_first_not_of(WHITESPACE) == string::npos) { //cmd is whitespace
+    if (s_cmd_line.find_first_not_of(WHITESPACE) == string::npos) { 
+      //cmd is whitespace
         return;
     }
     Command* cmd = CreateCommand(cmd_line);
-    if (cmd){
+    if (cmd {
         cmd->execute();
     }
 
@@ -242,28 +239,27 @@ JobsList::JobsList() : jobs_list(), jobs_num(1) {}
 
 void JobsList::removeFinishedJobs() {
     vector<JobEntry>::iterator curr_job;
-    for (curr_job = jobs_list.begin(); curr_job != jobs_list.end(); curr_job++){
+    for (curr_job = jobs_list.begin(); curr_job != jobs_list.end(); curr_job++) {
         pid_t pid = waitpid(curr_job->jobPid, nullptr, WNOHANG);
         if (pid != 0) {
             curr_job--;
             jobs_list.erase(curr_job + 1);
         }
-
     }
 }
 
 JobsList::JobEntry *JobsList::getLastStoppedJob(int *jobId) {
     int max_stopped_jid = -1;
     vector<JobsList::JobEntry>::iterator it;
-    for (it = jobs_list.begin(); it < jobs_list.end(); it++){
+    for (it = jobs_list.begin(); it < jobs_list.end(); it++) {
         JobsList::JobEntry current_job = *it;
-        if (current_job.is_stopped){
+        if (current_job.is_stopped) {
             max_stopped_jid = current_job.jobId;
         }
     }
+  
     *jobId = max_stopped_jid;
     return getJobById(max_stopped_jid);
-
 }
 
 JobsList::JobEntry *JobsList::getJobById(jid_t jobId) {
@@ -275,9 +271,10 @@ JobsList::JobEntry *JobsList::getJobById(jid_t jobId) {
     }
     return nullptr;
 }
-JobsList::JobEntry* JobsList::getJobByPId(pid_t jobPId){
+        
+JobsList::JobEntry* JobsList::getJobByPId(pid_t jobPId) {
     vector<JobEntry>::iterator it;
-    for(it =jobs_list.begin(); it!= jobs_list.end(); it++){
+    for(it =jobs_list.begin(); it!= jobs_list.end(); it++) {
         if(it->jobPid==jobPId){
             return &(*it);
         }
@@ -312,8 +309,7 @@ void JobsList::killAllJobs() {
 
 void JobsList::removeJobById(jid_t id){
     vector<JobsList::JobEntry>::iterator curr_job;
-    for(curr_job = jobs_list.begin(); curr_job != jobs_list.end(); curr_job++)
-    {
+    for(curr_job = jobs_list.begin(); curr_job != jobs_list.end(); curr_job++) {
         if(curr_job->jobId == id) {
             jobs_list.erase(curr_job);
             return;
@@ -322,7 +318,7 @@ void JobsList::removeJobById(jid_t id){
 }
 
 void JobsList::addJob(string cmd, pid_t pid, int duration, bool is_stopped) {
-    int id=1;
+    int id = 1;
     removeFinishedJobs();
     time_t timestamp;
     time(&timestamp);
@@ -367,7 +363,7 @@ time_t SmallShell::getMostRecentAlarmTime() {
     return time;
 }
 
-JobsList::JobEntry* SmallShell::getTimedOutJob(){
+JobsList::JobEntry* SmallShell::getTimedOutJob() {
 
     this->alarms_list.removeFinishedJobs();
     vector<JobsList::JobEntry>::iterator curr_job;
@@ -379,10 +375,10 @@ JobsList::JobEntry* SmallShell::getTimedOutJob(){
     return nullptr;
 }
 
-JobsList::JobEntry* JobsList::getLastJob(int* lastJobId){
+JobsList::JobEntry* JobsList::getLastJob(int* lastJobId) {
     int max_jid = -1;
     vector<JobsList::JobEntry>::iterator it;
-    for (it = jobs_list.begin(); it < jobs_list.end(); it++){
+    for (it = jobs_list.begin(); it < jobs_list.end(); it++) {
         JobsList::JobEntry current_job = *it;
         if (current_job.jobId > max_jid){
             max_jid = current_job.jobId;
@@ -497,13 +493,8 @@ void ForegroundCommand::execute() {
     char **args = makeArgs(cmd_line, &num_of_args);
     SmallShell &smash = SmallShell::getInstance();
     smash.jobs_list.removeFinishedJobs();
-    if (num_of_args == 1) { //Bring max job in list to foreground
-//        int max_jid;
-//        JobsList::JobEntry *job = smash.jobs_list.getLastJob(&max_jid);
-//
-//        if (!job) {
-//            cerr << "smash error: fg: jobs list is empty" << endl;
-//        }
+    if (num_of_args == 1) { 
+      // Bring max job in list to foreground
         if (smash.jobs_list.jobs_list.empty()){
             cerr << "smash error: fg: jobs list is empty" << endl;
             return;
@@ -511,7 +502,8 @@ void ForegroundCommand::execute() {
         int max_jid;
         JobsList::JobEntry *job = smash.jobs_list.getLastJob(&max_jid);
         if (job->is_stopped) {
-            if(kill(job->jobPid, SIGCONT) == FAIL) { // need to bring job to background
+            if(kill(job->jobPid, SIGCONT) == FAIL) { 
+              // need to bring job to background
                 perror("smash error: kill failed");
                 freeArgs(args, num_of_args);
                 return;
@@ -533,7 +525,8 @@ void ForegroundCommand::execute() {
         smash.fg_jid = EMPTY;
     }
 
-    else if (num_of_args == 2) { //Bring wanted job to foreground
+    else if (num_of_args == 2) { 
+      // Bring wanted job to foreground
         if(!isNumber(args[1])) {
             cerr << "smash error: fg: invalid arguments" << endl;
             freeArgs(args, num_of_args);
@@ -816,8 +809,7 @@ void TimeoutCommand::execute() {
     delete command;
 }
 
-void SmallShell::addTimeoutToAlarm(const char* cmd, pid_t pid, int duration)
-{
+void SmallShell::addTimeoutToAlarm(const char* cmd, pid_t pid, int duration) {
     string cmd_line = string(cmd);
     alarms_list.addJob(cmd_line, pid, duration, false);
 }
@@ -834,7 +826,7 @@ void TimeoutCommand::addAlarm(pid_t pid) const{
 }
 
 // ---- Pipe ---- //
-PipeCommand::PipeCommand(const char* cmd_line, bool is_stdout) : Command(cmd_line), is_stdout(is_stdout){}
+PipeCommand::PipeCommand(const char* cmd_line, bool is_stdout) : Command(cmd_line), is_stdout(is_stdout) {}
 void PipeCommand::execute(){
     int fds[2];
     if (pipe(fds) == FAIL){
@@ -842,6 +834,7 @@ void PipeCommand::execute(){
         return;
     }
     string command1,command2;
+  
     if (is_stdout) {
         command1 = string(cmd_no_ampersand).substr(0, string(cmd_no_ampersand).find_first_of('|'));
         command1 =  _trim(command1);
@@ -936,8 +929,8 @@ void PipeCommand::execute(){
 }
 
 // ---- Redirection ---- //
-RedirectionCommand::RedirectionCommand(const char* cmd_line, bool append) : Command(cmd_line), is_append(append){
-    //remove ampersand - not sure if needed
+RedirectionCommand::RedirectionCommand(const char* cmd_line, bool append) : Command(cmd_line), is_append(append) {
+    // removes &
     if (append){
         command = cmd_no_ampersand.substr(0,cmd_no_ampersand.find_first_of(">>"));
         command = _trim(command);
@@ -952,7 +945,7 @@ RedirectionCommand::RedirectionCommand(const char* cmd_line, bool append) : Comm
     }
 }
 
-void RedirectionCommand::execute(){
+void RedirectionCommand::execute() {
     SmallShell& smash = SmallShell::getInstance();
     int fd;
     if (is_append){
