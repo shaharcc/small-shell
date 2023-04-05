@@ -14,4 +14,6 @@ The shell supports IO, pipes, and complex commands (that requirs bin/bash files)
 - kill <sig-num> <job-id>: send signal to process
 - timeout <duration> <command>: sets an alarm for <duration> seconds for the executed <command>
 
+Note that makefile is already configured to run tests, a minimal one is in the repo.
+
 This was made by Timna Smadja (timnas) and myself.
