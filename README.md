@@ -15,3 +15,5 @@ The shell supports IO, pipes, and complex commands (that requirs bin/bash files)
 - timeout <duration> <command>: sets an alarm for <duration> seconds for the executed <command>
 
 This was made by Timna Smadja (timnas) and myself.
+
+To run: type make into terminal from within the project's directory.
