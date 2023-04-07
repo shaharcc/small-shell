@@ -1,4 +1,4 @@
-# small-shell
+# Small Shell
 A shell that resembles UNIX shell, supports different set of commands.
 This is based on an assignment given at OS course.
 The shell supports IO, pipes, and complex commands (that requirs bin/bash files) in addition to these commands:
@@ -16,4 +16,4 @@ The shell supports IO, pipes, and complex commands (that requirs bin/bash files)
 
 To run: type make into terminal from within the project's directory.
   
-This was made by Timna Smadja (timnas) and myself.
+This was made by [Timna Smadja](https://github.com/timnas) and myself.
