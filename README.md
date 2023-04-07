@@ -9,7 +9,7 @@ The shell supports IO, pipes, and complex commands (that requirs bin/bash files)
 - jobs: print list of jobd running (unfinished and stopped)
 - fg <job-id>: bring stopped process to foreground
 - bg <job-id>: resume stopped process to background
-- quit: exits shell
+- quit: exits shell,
   quit kill: kills all unfinnished jobs before exiting
 - kill <sig-num> <job-id>: send signal to process
 - timeout <duration> <command>: sets an alarm for <duration> seconds for the executed <command>
