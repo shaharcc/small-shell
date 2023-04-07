@@ -16,4 +16,4 @@ The shell supports IO, pipes, and complex commands (that requirs bin/bash files)
 
 To run: type make into terminal from within the project's directory.
   
-This was made by [Timna Smadja](https://github.com/timnas) and myself.
+This was made by [Timna Smadja](https://github.com/timnas) and [myself](https://github.com/shaharcc).
